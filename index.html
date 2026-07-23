@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="./assets/images/logo-sm.png" />
+  <meta content="Trò chuyện với Alan ngay" name="description" />
+  <title>Alan</title>
+
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="./assets/css/bootstrap.min.css" />
+  <script src="./assets/js/bootstrap.min.js"></script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+
+  <!-- App -->
+  <link rel="stylesheet" href="./assets/css/chat.css" />
+
+  <!-- Icons Css -->
+  <link href="./assets/fonts/phosphor/regular/style.css" rel="stylesheet" />
+
+  <!-- Highlight theme -->
+  <link id="highlight-theme" rel="stylesheet" href="./assets/libs/highlight/styles/github.min.css">
+
+  <!-- utils -->
+  <script src="./assets/js/utils.js"></script>
+
+  <!-- Lottie Player -->
+  <script src="./assets/libs/lottie/lottie-player.min.js"></script>
+  <style>
+    .settings-container {
+      flex: 1;
+      min-height: 0;
+    }
+
+    .gemini-input-group label {
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: var(--text-color);
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .gemini-input-group p {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-color);
+      margin-bottom: 0.375rem;
+      text-align: left;
+    }
+
+    .gemini-input {
+      width: 100%;
+      background-color: var(--active-bg-color);
+      color: var(--text-color);
+      border: 1px solid transparent;
+      border-radius: 0.75rem;
+      /* ~12px */
+      padding: 0.75rem;
+      font-size: 0.875rem;
+      line-height: 1.5;
+      outline: none;
+      transition: all 0.2s ease;
+      resize: vertical;
+      display: block;
+    }
+
+    .gemini-input:focus {
+      background-color: var(--hover-bg-color);
+      border-color: var(--text-color-bolder);
+      box-shadow: 0 0 0 2px rgba(128, 128, 128, 0.1);
+    }
+
+    .gemini-input::placeholder {
+      color: var(--text-color-bolder);
+      opacity: 0.5;
+    }
+
+    /* Ensure settings take full height for scrolling */
+    .sidebar-wrapper .item-content {
+      display: flex;
+      flex-direction: column;
+    }
+  </style>
+</head>
+
+<body class="position-relative">
+  <div class="loading-overlay d-flex justify-content-center align-items-center">
+    <div class="loader">
+    </div>
+  </div>
+  <div class="main-container">
+    <!-- Mobile Topbar -->
+
+    <!-- End Mobile Topbar -->
+
+    <!-- Sidebar -->
+    <div class="sidebar-wrapper">
+      <div class="sidebar devider-r">
+        <div class="sidebar-top">
+          <div class="head-icon-wrapper mt-4">
+            <img src="./assets/images/logo-sm.png" alt="" width="38" height="38">
+            <!-- Expand button - shown on hover when sidebar collapsed -->
+            <span class="expand-sidebar-btn"
+              onclick="toggleSideBarContent(document.querySelector('.content-container'))" title="Mở rộng">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="transparent"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect width="18" height="18" x="3" y="3" rx="2"></rect>
+                <path d="M9 3v18"></path>
+                <path d="m14 9 3 3-3 3"></path>
+              </svg>
+            </span>
+          </div>
+          <div class="sidebar-menu gap-4">
+            <!-- item chat conversation menu -->
+            <a href="#" class="sidebar-menu-item sidebar-chat" onclick="onSideBarMenuItemClicked(this)">
+              <i class="ph ph-chat item-btn"></i>
+              <!-- content of conversation menu -->
+              <div class="item-content d-flex flex-column p-3 d-none devider-r">
+                <div class="sidebar-chat-top d-flex flex-column gap-4">
+                  <div
+                    class="conversations-heading p-1 p-md-3 w-100 d-flex gap-3 justify-content-between align-items-center">
+                    <div class="d-flex align-items-center gap-3">
+                      <img class="d-md-none d-block head-icon e-mobile" src="./assets/images/logo-sm-no-p.png" alt="">
+                      <h1 class="m-0">Alan AI</h1>
+                    </div>
+                    <span class="collapse-sidebar-btn active-effect"
+                      onclick="toggleSideBarContent(document.querySelector('.content-container'))" title="Thu gọn">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="transparent" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <rect width="18" height="18" x="3" y="3" rx="2"></rect>
+                        <path d="M9 3v18"></path>
+                        <path d="m16 15-3-3 3-3"></path>
+                      </svg>
+                    </span>
+                  </div>
+                  <button class="btn new-chat-btn d-flex align-items-center justify-content-center gap-2"
+                    onclick="requestNewChat()">
+                    <i class="ph ph-plus fw-bold"></i>
+                    <span>Cuộc trò chuyện mới</span>
+                  </button>
+                  <!-- search box -->
+                  <div class="search-box">
+                    <i class="ph ph-magnifying-glass"></i>
+                    <input id="search-input" type="text" placeholder="Tìm kiếm hội thoại">
+                    <span class="search-shortcut">Ctrl K</span>
+                  </div>
+                  <!-- end search box -->
+                </div>
+
+                <!-- devider -->
+                <div class="devider-b h-auto my-3 mx-3"></div>
+
+                <!-- conversation list -->
+                <div class="conversation-list-text text-start pt-1 pb-3">
+                  Danh sách cuộc trò chuyện
+                </div>
+                <div class="conversations sidebar-chat-list v-scrollable d-flex flex-column gap-2 w-100">
+                  <!-- Rendered dynamically by renderConversationList() -->
+                </div>
+                <!-- end conversation list -->
+              </div>
+              <!-- end content of conversation menu -->
+            </a>
+            <!-- end item chat conversation menu -->
+
+            <!-- item settings conversation menu -->
+            <a href="#" class="sidebar-menu-item settings item-btn" onclick="onSideBarMenuItemClicked(this)">
+              <i class="ph ph-gear"></i>
+              <div class="item-content p-3 d-none devider-r v-scrollable">
+                <div class="sidebar-chat-top d-flex flex-column gap-4">
+                  <div class="settings-heading w-100 d-flex gap-3 justify-content-between align-items-center">
+                    <h1 class="m-0">Cài đặt</h1>
+                    <span class="collapse-sidebar-btn active-effect"
+                      onclick="toggleSideBarContent(document.querySelector('.content-container'))" title="Thu gọn">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="transparent" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <rect width="18" height="18" x="3" y="3" rx="2"></rect>
+                        <path d="M9 3v18"></path>
+                        <path d="m16 15-3-3 3-3"></path>
+                      </svg>
+                    </span>
+                  </div>
+                </div>
+                <!-- settings -->
+                <div class="settings settings-container gap-4 v-scrollable p-3 mt-3">
+                  <!-- Theme Settings - At top -->
+                  <div class="setting-group setting-theme d-flex flex-column gap-2 overflow-hidden">
+                    <h4 class="theme-title w-100 d-flex justify-content-start">Giao diện</h4>
+                    <div class="theme-select row justify-content-between">
+                      <div class="col-3 theme-option theme-system d-flex flex-column gap-2 align-items-center active">
+                        <div data-theme-mode="system"
+                          class="theme-icon-wrapper d-flex justify-content-center align-items-center rounded-4"
+                          onclick="currentThemeMode = this.dataset.themeMode; initTheme();">
+                          <i class="ph ph-faders-horizontal"></i>
+                        </div>
+                        <h6 class="theme-text">Hệ thống</h6>
+                      </div>
+                      <div class="col-3 theme-option theme-dark d-flex flex-column gap-2 align-items-center">
+                        <div data-theme-mode="dark"
+                          class="theme-icon-wrapper d-flex justify-content-center align-items-center rounded-4"
+                          onclick="currentThemeMode = this.dataset.themeMode; initTheme();">
+                          <i class="ph ph-moon"></i>
+                        </div>
+                        <h6 class="theme-text">Tối</h6>
+                      </div>
+                      <div class="col-3 theme-option theme-light d-flex flex-column gap-2 align-items-center">
+                        <div data-theme-mode="light"
+                          class="theme-icon-wrapper d-flex justify-content-center align-items-center rounded-4"
+                          onclick="currentThemeMode = this.dataset.themeMode; initTheme();">
+                          <i class="ph ph-sun-dim"></i>
+                        </div>
+                        <h6 class="theme-text">Sáng</h6>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Accent Color Picker -->
+                  <div class="setting-group setting-accent-color d-flex flex-column gap-2 mt-3">
+                    <h4 class="w-100 d-flex justify-content-start">Màu chủ đề</h4>
+                    <div class="accent-color-grid d-flex flex-wrap gap-2">
+                      <div class="accent-color-option" data-color="#1a9b8c" style="background-color: #1a9b8c;"
+                        onclick="setAccentColor(this)" title="Teal"></div>
+                      <div class="accent-color-option" data-color="#1e70c2" style="background-color: #1e70c2;"
+                        onclick="setAccentColor(this)" title="Blue"></div>
+                      <div class="accent-color-option" data-color="#8b5cf6" style="background-color: #8b5cf6;"
+                        onclick="setAccentColor(this)" title="Purple"></div>
+                      <div class="accent-color-option" data-color="#ec4899" style="background-color: #ec4899;"
+                        onclick="setAccentColor(this)" title="Pink"></div>
+                      <div class="accent-color-option" data-color="#ef4444" style="background-color: #ef4444;"
+                        onclick="setAccentColor(this)" title="Red"></div>
+                      <div class="accent-color-option" data-color="#f97316" style="background-color: #f97316;"
+                        onclick="setAccentColor(this)" title="Orange"></div>
+                      <div class="accent-color-option" data-color="#eab308" style="background-color: #eab308;"
+                        onclick="setAccentColor(this)" title="Yellow"></div>
+                      <div class="accent-color-option" data-color="#22c55e" style="background-color: #22c55e;"
+                        onclick="setAccentColor(this)" title="Green"></div>
+                    </div>
+                  </div>
+                  <!-- Provider Settings - Collapsible Panels -->
+                  <div class="provider-settings-section d-flex flex-column gap-3 mt-3">
+                    <h4 class="w-100 d-flex justify-content-start mb-2">Cấu hình API</h4>
+
+                    <!-- Gemini Provider -->
+                    <div class="provider-panel" data-provider="gemini">
+                      <div class="provider-panel-header" onclick="toggleProviderPanel(this)">
+                        <span class="toggle-icon">▶</span>
+                        <span class="provider-panel-name">Gemini</span>
+                        <span class="provider-status"></span>
+                      </div>
+                      <div class="provider-panel-content" style="display: none;">
+                        <div class="gemini-input-group">
+                          <p>API Keys</p>
+                          <textarea class="gemini-input provider-api-keys v-scrollable" rows="2"
+                            placeholder="AIzaSy..., AIzaSy..." onchange="saveProviderConfig('gemini')"
+                            onblur="saveProviderConfig('gemini')"></textarea>
+                        </div>
+                        <div class="gemini-input-group mt-2">
+                          <p>Models</p>
+                          <textarea class="gemini-input provider-models v-scrollable" rows="2"
+                            placeholder="gemini-2.0-flash-exp, gemini-1.5-pro" onchange="saveProviderConfig('gemini')"
+                            onblur="saveProviderConfig('gemini')"></textarea>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Google Search Config -->
+                    <div class="provider-panel" data-provider="google-search">
+                      <div class="provider-panel-header" onclick="toggleProviderPanel(this)">
+                        <span class="toggle-icon">▶</span>
+                        <span class="provider-panel-name">Google Search</span>
+                        <span class="provider-status"></span>
+                      </div>
+                      <div class="provider-panel-content" style="display: none;">
+                        <div class="gemini-input-group">
+                          <p>API Key</p>
+                          <textarea class="gemini-input google-search-key v-scrollable" rows="1" placeholder="AIzaSy..."
+                            onchange="saveGoogleSearchConfig()" onblur="saveGoogleSearchConfig()"></textarea>
+                        </div>
+                        <div class="gemini-input-group mt-2">
+                          <p>Search Engine ID (cx)</p>
+                          <textarea class="gemini-input google-search-cx v-scrollable" rows="1"
+                            placeholder="017576662512468239146:omuauf_lfve" onchange="saveGoogleSearchConfig()"
+                            onblur="saveGoogleSearchConfig()"></textarea>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Groq Provider -->
+                    <div class="provider-panel" data-provider="groq">
+                      <div class="provider-panel-header" onclick="toggleProviderPanel(this)">
+                        <span class="toggle-icon">▶</span>
+                        <span class="provider-panel-name">Groq</span>
+                        <span class="provider-status"></span>
+                      </div>
+                      <div class="provider-panel-content" style="display: none;">
+                        <div class="gemini-input-group">
+                          <p>API Keys</p>
+                          <textarea class="gemini-input provider-api-keys v-scrollable" rows="2"
+                            placeholder="gsk_..., gsk_..." onchange="saveProviderConfig('groq')"
+                            onblur="saveProviderConfig('groq')"></textarea>
+                        </div>
+                        <div class="gemini-input-group mt-2">
+                          <p>Models</p>
+                          <textarea class="gemini-input provider-models v-scrollable" rows="2"
+                            placeholder="llama-3.3-70b-versatile, mixtral-8x7b-32768"
+                            onchange="saveProviderConfig('groq')" onblur="saveProviderConfig('groq')"></textarea>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- OpenRouter Provider -->
+                    <div class="provider-panel" data-provider="openrouter">
+                      <div class="provider-panel-header" onclick="toggleProviderPanel(this)">
+                        <span class="toggle-icon">▶</span>
+                        <span class="provider-panel-name">OpenRouter</span>
+                        <span class="provider-status"></span>
+                      </div>
+                      <div class="provider-panel-content" style="display: none;">
+                        <div class="gemini-input-group">
+                          <p>API Keys</p>
+                          <textarea class="gemini-input provider-api-keys v-scrollable" rows="2"
+                            placeholder="sk-or-..., sk-or-..." onchange="saveProviderConfig('openrouter')"
+                            onblur="saveProviderConfig('openrouter')"></textarea>
+                        </div>
+                        <div class="gemini-input-group mt-2">
+                          <p>Models</p>
+                          <textarea class="gemini-input provider-models v-scrollable" rows="2"
+                            placeholder="qwen/qwen3-coder:free, anthropic/claude-3.5-sonnet"
+                            onchange="saveProviderConfig('openrouter')"
+                            onblur="saveProviderConfig('openrouter')"></textarea>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Mistral AI Provider -->
+                    <div class="provider-panel" data-provider="mistral">
+                      <div class="provider-panel-header" onclick="toggleProviderPanel(this)">
+                        <span class="toggle-icon">▶</span>
+                        <span class="provider-panel-name">Mistral AI</span>
+                        <span class="provider-status"></span>
+                      </div>
+                      <div class="provider-panel-content" style="display: none;">
+                        <div class="gemini-input-group">
+                          <p>API Keys</p>
+                          <textarea class="gemini-input provider-api-keys v-scrollable" rows="2"
+                            placeholder="sk-..., sk-..." onchange="saveProviderConfig('mistral')"
+                            onblur="saveProviderConfig('mistral')"></textarea>
+                        </div>
+                        <div class="gemini-input-group mt-2">
+                          <p>Models</p>
+                          <textarea class="gemini-input provider-models v-scrollable" rows="2"
+                            placeholder="mistral-large-latest, mistral-small-latest"
+                            onchange="saveProviderConfig('mistral')" onblur="saveProviderConfig('mistral')"></textarea>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Local Provider -->
+                    <div class="provider-panel" data-provider="local">
+                      <div class="provider-panel-header" onclick="toggleProviderPanel(this)">
+                        <span class="toggle-icon">▶</span>
+                        <span class="provider-panel-name">Local (LM Studio)</span>
+                        <span class="provider-status"></span>
+                      </div>
+                      <div class="provider-panel-content" style="display: none;">
+                        <div class="gemini-input-group">
+                          <p>API Keys</p>
+                          <textarea class="gemini-input provider-api-keys v-scrollable" rows="2"
+                            placeholder="lm-studio" onchange="saveProviderConfig('local')"
+                            onblur="saveProviderConfig('local')"></textarea>
+                        </div>
+                        <div class="gemini-input-group mt-2">
+                          <p>Models</p>
+                          <textarea class="gemini-input provider-models v-scrollable" rows="2"
+                            placeholder="local-model"
+                            onchange="saveProviderConfig('local')" onblur="saveProviderConfig('local')"></textarea>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="text-color-darker mt-2" style="font-size: 0.85rem; opacity: 0.7;">
+                      Nhập nhiều key/model phân cách bằng dấu phẩy. Hệ thống thử lần lượt nếu lỗi.
+                    </div>
+
+                    <!-- Export/Import Config -->
+                    <div class="config-backup-wrapper mt-2 pt-3" style="border-top: 1px solid var(--devider-color);">
+                      <h4 class="w-100 d-flex justify-content-start mb-2">Sao lưu</h4>
+                      <div class="d-flex gap-2">
+                        <button class="btn btn-outline-secondary btn-sm"
+                          onclick="exportConfig(); event.stopPropagation();">
+                          <i class="ph ph-download-simple"></i> Xuất config
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm"
+                          onclick="importConfig(); event.stopPropagation();">
+                          <i class="ph ph-upload-simple"></i> Nhập config
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+                <!-- end settings -->
+                <!-- end settings -->
+
+              </div>
+            </a>
+
+            <!-- item api stats menu -->
+            <a href="#" class="sidebar-menu-item stats-menu item-btn"
+              onclick="onSideBarMenuItemClicked(this); renderApiStatsTab();">
+              <i class="ph ph-chart-bar"></i>
+              <div class="item-content d-flex flex-column p-3 d-none devider-r">
+                <div class="stats-container gap-4 v-scrollable">
+                  <div class="sidebar-chat-top d-flex flex-column gap-4">
+                    <div class="stats-heading w-100 d-flex gap-3 justify-content-between align-items-center">
+                      <h1 class="m-0">Thống kê API</h1>
+                      <button class="btn clear-stats-btn" onclick="clearApiStats(); event.stopPropagation();">
+                        <i class="ph ph-trash"></i>
+                        Xóa
+                      </button>
+                    </div>
+                  </div>
+                  <!-- Stats list will be rendered by JS -->
+                  <div class="api-stats-list d-flex flex-column gap-3 mt-3">
+                    <div class="stats-empty">Chưa có dữ liệu thống kê</div>
+                  </div>
+                </div>
+              </div>
+            </a>
+            <!-- end item api stats menu -->
+          </div>
+        </div>
+        <div class="sidebar-bottom">
+
+        </div>
+      </div>
+    </div>
+    <!--End sidebar -->
+
+    <!-- Chat content -->
+    <div class="chat-container content-container expanded d-flex flex-column">
+      <!-- chat content heading (commented out - buttons moved to sidebar headings) -->
+      <!--
+      <div class="chat-heading d-flex align-items-center justify-content-between gap-3 p-3 devider-b">
+        <div class="heading-left d-flex align-items-center gap-3">
+          <div class="expand-btn d-none d-md-block active-effect"
+            onclick="toggleSideBarContent(this.closest('.content-container'))">
+            <span class="expand-icon item-btn" role="img">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="transparent"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect width="18" height="18" x="3" y="3" rx="2"></rect>
+                <path d="M9 3v18"></path>
+                <path d="m14 9 3 3-3 3"></path>
+              </svg>
+            </span>
+            <span class="collapse-icon item-btn" role="img">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="transparent"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect width="18" height="18" x="3" y="3" rx="2"></rect>
+                <path d="M9 3v18"></path>
+                <path d="m16 15-3-3 3-3"></path>
+              </svg>
+            </span>
+          </div>
+
+          <div class="expand-btn e-mobile d-md-none d-block app-bg-active"
+            onclick="toggleSideBarContent(this.closest('.content-container'))">
+            <span class="menu-icon" role="img">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="transparent"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="lucide lucide-menu">
+                <line x1="3" y1="8" x2="21" y2="8"></line>
+                <line x1="3" y1="16" x2="15" y2="16"></line>
+              </svg>
+            </span>
+          </div>
+
+          <div class="m-0 p-2 d-none d-md-flex flex-column gap-1">
+            <h4 class="chat-title">
+              Trò chuyện phím
+            </h4>
+            <span class="chat-time-created text-color-darker">Đoạn chat được tạo vào ngày 2/2/2025</span>
+          </div>
+        </div>
+        <div class="heading-middle d-block d-md-none">
+          <h1 class="chat-title e-mobile text-center m-0 p-2 d-md-none d-block">
+            Alan GPT
+          </h1>
+        </div>
+        <div class="heading-right d-flex align-items-center gap-3">
+          <span class="new-chat-btn active-effect d-flex align-items-center justify-content-center p-1"
+            onclick="requestNewChat()">
+            <i class="ph ph-plus item-btn"></i>
+          </span>
+          <span class="export-chat-btn active-effect d-none d-md-block" onclick="exportChat()">
+            <i class="ph ph-export item-btn"></i>
+          </span>
+        </div>
+      </div>
+      -->
+
+      <!-- end chat content heading -->
+
+
+      <!-- chat body -->
+      <div class="chat-body d-flex flex-column w-100 position-relative">
+
+        <!-- chat conversation area -->
+        <div class="chat-conversation flex-grow-1 no-scrollbar d-flex flex-column gap-2 p-3">
+          <!-- Messages will be added here dynamically -->
+          <div class="welcome-message">
+            <h2>Xin chào! 👋</h2>
+            <p>Tôi là AI assistant với khả năng tìm kiếm web và đọc nội dung trang.</p>
+            <p>Hãy cấu hình API key ở sidebar (Settings) để bắt đầu!</p>
+          </div>
+        </div>
+
+        <!-- chat input -->
+        <div class="chat-input-wrapper py-3 px-4 d-flex flex-column gap-3 w-100">
+          <div class="chat-data-wrapper flex-grow-1 v-scrollable">
+            <textarea class="chat-input w-100 v-scrollable" placeholder="Ask anything."
+              style="resize: none;"></textarea>
+            <div class="uploaded-image-list-wrapper w-100">
+            </div>
+          </div>
+          <div class="chat-tools-wrapper w-100 d-flex align-items-center justify-content-between">
+            <div class="left-group d-flex align-items-center gap-2">
+              <span class="upload-file-btn active-effect tool-btn">
+                <i class="ph ph-folder-simple item-btn"></i>
+              </span>
+              <span class="upload-img-btn active-effect tool-btn"
+                onclick="document.getElementById('input-upload-image').click();">
+                <i class="ph ph-image item-btn"></i>
+                <input type="file" id="input-upload-image" accept="image/*" hidden>
+              </span>
+              <span class="allow-search-btn active-effect tool-btn active"
+                onclick="allowSearch=!allowSearch; this.classList.toggle('active');">
+                <i class="ph ph-magnifying-glass item-btn"></i>
+              </span>
+            </div>
+            <div class="right-group d-flex align-items-center gap-3">
+              <!-- Provider Selector -->
+              <div class="provider-selector-wrapper position-relative">
+                <span class="provider-btn active-effect tool-btn d-flex align-items-center gap-1 px-2"
+                  onclick="toggleProviderDropdown()">
+                  <span class="provider-name">Gemini</span>
+                  <i class="ph ph-caret-up" style="font-size: 0.875rem;"></i>
+                </span>
+                <div class="provider-dropdown" style="display: none;">
+                  <div class="provider-option" data-provider="gemini" onclick="selectProvider('gemini')">
+                    <i class="ph ph-check provider-check"></i>
+                    <span>Gemini</span>
+                  </div>
+                  <div class="provider-option" data-provider="groq" onclick="selectProvider('groq')">
+                    <i class="ph ph-check provider-check"></i>
+                    <span>Groq</span>
+                  </div>
+                  <div class="provider-option" data-provider="openrouter" onclick="selectProvider('openrouter')">
+                    <i class="ph ph-check provider-check"></i>
+                    <span>OpenRouter</span>
+                  </div>
+                  <div class="provider-option" data-provider="mistral" onclick="selectProvider('mistral')">
+                    <i class="ph ph-check provider-check"></i>
+                    <span>Mistral AI</span>
+                  </div>
+                  <div class="provider-option" data-provider="local" onclick="selectProvider('local')">
+                    <i class="ph ph-check provider-check"></i>
+                    <span>Local (LM Studio)</span>
+                  </div>
+                </div>
+              </div>
+              <!-- <span class="active-effect tool-btn" onclick="toggleChatInputExpand()">
+                <i class="ph ph-paperclip item-btn"></i>
+              </span> -->
+              <!-- Send/Stop button integrated -->
+              <div class="send-stop-btn-wrapper">
+                <span class="send-btn-icon active-effect"
+                  onclick="addUserMessageAndSend(chatInputEl.value); chatInputEl.value = '';">
+                  <i class="ph ph-paper-plane-right"></i>
+                </span>
+                <span class="stop-btn-icon active-effect" onclick="stopCurrentRequest()">
+                  <i class="ph ph-stop"></i>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- end chat input -->
+      </div>
+      <!-- chat body -->
+    </div>
+  </div>
+</body>
+<script src="./assets/libs/highlight/highlight.min.js"></script>
+<script src="./assets/libs/markdown/markdown-it.min.js"></script>
+<script src="./assets/js/search-tools.js"></script>
+<script src="./assets/js/api-providers.js"></script>
+<script src="./assets/js/db.js"></script>
+<script src="./assets/js/chat.js"></script>
+<script src="./assets/js/app.js"></script>
+
+</html>

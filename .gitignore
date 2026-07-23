@@ -1,0 +1,36 @@
+# Agent & System folders
+.agent/
+
+# Project version backups & archives
+versions/
+*.zip
+*.tar.gz
+*.rar
+
+# IDE & Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Environment & Secret files
+.env
+.env.local
+.env.*.local
+*.pem
+
+# Temporary files & Logs
+*.log
+temp-conversation.html
+
+# Node dependencies (nếu có sau này)
+node_modules/

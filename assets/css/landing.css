@@ -1,0 +1,341 @@
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #d9d9d9;
+}
+
+header {
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+        background: black;
+        color: white;
+    
+}
+
+header .logo {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+header nav ul {
+    list-style: none;
+    display: flex;
+}
+
+header nav ul li {
+    margin-left: 20px;
+}
+
+header nav ul li a {
+    font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
+    text-decoration: none;
+    color: #ffffff;
+    padding: 8px 12px;
+    border-radius: 4px;
+    transition: all 0.3s ease; /* Hiệu ứng mượt khi hover */
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+header nav ul li a:hover {
+    background-color: rgba(255, 255, 255, 0.2); /* Màu nền khi hover */
+    transform: translateY(-2px); /* Nhích lên nhẹ */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Đổ bóng nhẹ */
+}
+header nav ul li a:hover {
+    color: #f0f0f0;
+    background-color: #333;
+
+}
+
+
+
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 20px;
+    height: auto;
+}
+
+.chatbot-container {
+    display: flex;
+    align-items: center;
+    
+}
+
+.chatbot-phone {
+    background-color: #fff;
+    border-radius: 20px;
+    padding: 20px;
+    width: 300px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.chatbot-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chatbot-header .logo {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.chatbot-messages {
+    margin: 20px 0;
+}
+
+.chatbot-messages .message {
+    background-color: #f0f0f0;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+}
+
+.chatbot-messages .message.user {
+    background-color: #e0f7fa;
+    align-self: flex-end;
+}
+
+.chatbot-messages .message.bot {
+    background-color: #f0f0f0;
+    align-self: flex-start;
+}
+
+.chatbot-input input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+}
+
+.chatbot-info {
+    margin-left: 50px;
+    text-align: left;
+}
+
+.chatbot-info h2 {
+    font-size: 36px; /* tăng kích thước */
+    font-weight: 900; /* in đậm hơn nữa */
+    text-transform: uppercase; /* viết hoa toàn bộ */
+    letter-spacing: 1px; /* giãn chữ nhẹ */
+    margin-bottom: 20px;
+    color: #333333; /* đậm hơn xíu */
+}
+
+.chatbot-info p {
+    font-size: 16px;
+    font-weight: 600; /* in đậm hơn một chút */
+    line-height: 1.6;
+    color: #333333;
+    max-width: 600px;
+}
+.chatbot-info button.get-started:hover {
+    background-color: #fff;
+    color: #000;
+}
+
+.chatbot-info button.get-started {
+    background-color: #000000;
+    color: #fff;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 30px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.chatbot-info .social-icons {
+    margin-top: 30px;
+}
+
+.chatbot-info .social-icons a {
+    display: inline-block;
+    background-color: #ddd;
+    color: #333;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 40px;
+    margin-right: 10px;
+    text-decoration: none;
+}
+
+.introduce-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 100px 20px;
+}
+
+.introduce-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: nowrap; /* không cho xuống dòng */
+    margin-top: 20px;
+    text-align: left;
+    gap: 30px; /* khoảng cách giữa ảnh và text */
+    position: relative;
+}
+
+.text-box {
+    max-width: 600px;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    font-weight: 600;
+    font-size: 14px;
+    color: #333;
+    width: 600px;
+    /*
+    z-index: 2; /* Ensure text box stays above other elements 
+    margin-left: 150px; /* Make space for the bot image */ 
+}
+
+.text-box h3 {
+    font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
+    font-size: 19px;
+    font-weight: 800;
+    text-transform: uppercase;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+.text-box h4 {
+    font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
+    font-size: 17px;
+    font-weight: 800;
+    margin-bottom: 10px;
+}
+
+.text-box ul {
+    font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
+    padding-left: 20px;
+    list-style-type: disc;
+    font-weight: 600;
+    line-height: 1.8;
+ 
+}
+
+
+.image-style {
+    max-width: 600px;
+    height: auto;
+    width: 300px; 
+
+    
+}
+
+
+
+.model-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 20px;
+}
+
+.model-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: nowrap; /* không cho xuống dòng */
+    margin-top: 20px;
+    text-align: left;
+    gap: 30px; /* khoảng cách giữa ảnh và text */
+}
+
+
+    
+.developer-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* canh giữa nội dung theo chiều ngang */
+    justify-content: center;
+    padding: 30px 20px;
+    text-align: center;
+    position: relative;
+
+    /* Thêm dòng này để có background */
+    background: url('/alan/assets/images/dev.png') center/cover no-repeat;
+    background-size: 100% auto;
+    background-position: center top;
+    
+    max-height: 500px;
+    overflow: hidden;
+}
+
+/* Thêm lớp overlay mờ để đảm bảo chữ dễ đọc */
+.developer-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+.developer-wrapper h2 {
+    font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
+    font-size: 32px;
+    font-weight: 00;
+    color:#ddd;
+    margin-bottom: 30px; 
+    position: relative;
+  }
+  
+  .dev-card {
+    display: flex;
+    align-items: center;
+    background: linear-gradient(to right, #f1f1f1, #f3f2f2);
+    padding: 20px 30px;
+    margin-bottom: 20px;
+    border-radius: 40px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    width: fit-content;
+    position: relative;
+  }
+  
+  .dev-card img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-right: 20px;
+    object-fit: cover;
+  }
+  
+  .dev-info h3 {
+    font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    margin: 0;
+  }
+  
+  .dev-info p {
+    font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    margin-top: 5px;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+}
+ 
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-15px); }
+    100% { transform: translateY(0px); }
+}
+
+.floating-bot {
+    animation: float 3s ease-in-out infinite;
+}

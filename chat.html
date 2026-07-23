@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="./assets/images/logo-sm.png" />
+  <meta content="Trò chuyện với Alan ngay" name="description" />
+  <title>Alan</title>
+
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="./assets/css/bootstrap.min.css" />
+  <script src="./assets/js/bootstrap.min.js"></script>
+
+  <!-- App -->
+  <link rel="stylesheet" href="./assets/css/chat.css" />
+
+  <!-- Icons Css -->
+  <link href="./assets/fonts/phosphor/regular/style.css" rel="stylesheet" />
+
+  <!-- Highlight theme -->
+  <link id="highlight-theme" rel="stylesheet" href="./assets/libs/highlight/styles/github.min.css">
+
+  <!-- utils -->
+  <script src="./assets/js/utils.js"></script>
+
+  <!-- Lottie Player -->
+  <script src="./assets/libs/lottie/lottie-player.min.js"></script>
+  <style>
+    .settings-container {
+      flex: 1;
+      min-height: 0;
+    }
+
+    .gemini-input-group label {
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: var(--text-color);
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .gemini-input-group p {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-color);
+      margin-bottom: 0.375rem;
+      text-align: left;
+    }
+
+    .gemini-input {
+      width: 100%;
+      background-color: var(--active-bg-color);
+      color: var(--text-color);
+      border: 1px solid transparent;
+      border-radius: 0.75rem;
+      /* ~12px */
+      padding: 0.75rem;
+      font-size: 0.875rem;
+      line-height: 1.5;
+      outline: none;
+      transition: all 0.2s ease;
+      resize: vertical;
+      display: block;
+    }
+
+    .gemini-input:focus {
+      background-color: var(--hover-bg-color);
+      border-color: var(--text-color-bolder);
+      box-shadow: 0 0 0 2px rgba(128, 128, 128, 0.1);
+    }
+
+    .gemini-input::placeholder {
+      color: var(--text-color-bolder);
+      opacity: 0.5;
+    }
+
+    /* Ensure settings take full height for scrolling */
+    .sidebar-wrapper .item-content {
+      display: flex;
+      flex-direction: column;
+    }
+  </style>
+</head>
+
+<body class="position-relative">
+  <div class="loading-overlay d-flex justify-content-center align-items-center">
+    <div class="loader">
+    </div>
+  </div>
+  <div class="main-container">
+
+    <!-- Chat content -->
+    <div class="chat-container content-container d-flex flex-column">
+      <!-- chat content heading -->
+      <div class="chat-heading d-flex align-items-center justify-content-between gap-3 p-3 devider-b">
+        <div class="heading-left d-flex align-items-center gap-3">
+          <!-- open sidebar for tablet, laptop, desktop -->
+          <div class="expand-btn d-none d-md-block active-effect"
+            onclick="toggleSideBarContent(this.closest('.content-container'))">
+            <span class="expand-icon item-btn" role="img">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="transparent"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect width="18" height="18" x="3" y="3" rx="2"></rect>
+                <path d="M9 3v18"></path>
+                <path d="m14 9 3 3-3 3"></path>
+              </svg>
+            </span>
+            <span class="collapse-icon item-btn" role="img">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="transparent"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect width="18" height="18" x="3" y="3" rx="2"></rect>
+                <path d="M9 3v18"></path>
+                <path d="m16 15-3-3 3-3"></path>
+              </svg>
+            </span>
+          </div>
+
+          <!-- open sidebar for mobile -->
+          <div class="expand-btn e-mobile d-md-none d-block app-bg-active"
+            onclick="toggleSideBarContent(this.closest('.content-container'))">
+            <span class="menu-icon" role="img">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="transparent"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="lucide lucide-menu">
+                <line x1="3" y1="8" x2="21" y2="8"></line>
+                <line x1="3" y1="16" x2="15" y2="16"></line>
+              </svg>
+            </span>
+          </div>
+
+          <div class="m-0 p-2 d-none d-md-flex flex-column gap-1">
+            <h4 class="chat-title">
+              Trò chuyện phím
+            </h4>
+            <span class="chat-time-created text-color-darker">Đoạn chat được tạo vào ngày 2/2/2025</span>
+          </div>
+        </div>
+        <div class="heading-middle d-block d-md-none">
+          <h1 class="chat-title e-mobile text-center m-0 p-2 d-md-none d-block">
+            Alan GPT
+          </h1>
+        </div>
+        <div class="heading-right d-flex align-items-center gap-3">
+          <span class="new-chat-btn active-effect d-flex align-items-center justify-content-center p-1"
+            onclick="requestNewChat()">
+            <i class="ph ph-plus item-btn"></i>
+          </span>
+          <span class="export-chat-btn active-effect d-none d-md-block" onclick="exportChat()">
+            <i class="ph ph-export item-btn"></i>
+          </span>
+        </div>
+      </div>
+      <!-- end chat content heading -->
+
+      <!-- chat body -->
+      <div class="chat-body d-flex flex-column w-100 position-relative">
+
+        <!-- chat conversation area -->
+        <div class="chat-conversation flex-grow-1 no-scrollbar d-flex flex-column gap-2 p-3">
+          <!-- Messages will be added here dynamically -->
+          <div class="welcome-message">
+            <h2>Xin chào! 👋</h2>
+            <p>Tôi là AI assistant với khả năng tìm kiếm web và đọc nội dung trang.</p>
+            <p>Hãy cấu hình API key ở sidebar (Settings) để bắt đầu!</p>
+          </div>
+        </div>
+
+        <!-- chat input -->
+        <div class="chat-input-wrapper py-3 px-4 d-flex flex-column gap-3 w-100">
+          <div class="chat-data-wrapper flex-grow-1 v-scrollable">
+            <textarea class="chat-input w-100 v-scrollable" placeholder="Ask anything."
+              style="resize: none;"></textarea>
+            <div class="uploaded-image-list-wrapper w-100">
+            </div>
+          </div>
+          <div class="chat-tools-wrapper w-100 d-flex align-items-center justify-content-between">
+            <div class="left-group d-flex align-items-center gap-2">
+              <span class="upload-file-btn active-effect tool-btn">
+                <i class="ph ph-folder-simple item-btn"></i>
+              </span>
+              <span class="upload-img-btn active-effect tool-btn"
+                onclick="document.getElementById('input-upload-image').click();">
+                <i class="ph ph-image item-btn"></i>
+                <input type="file" id="input-upload-image" accept="image/*" hidden>
+              </span>
+              <span class="allow-search-btn active-effect tool-btn active"
+                onclick="allowSearch=!allowSearch; this.classList.toggle('active');">
+                <i class="ph ph-magnifying-glass item-btn"></i>
+              </span>
+            </div>
+            <div class="right-group d-flex align-items-center gap-3">
+              <!-- Provider Selector -->
+              <div class="provider-selector-wrapper position-relative">
+                <span class="provider-btn active-effect tool-btn d-flex align-items-center gap-1 px-2"
+                  onclick="toggleProviderDropdown()">
+                  <span class="provider-name">Gemini</span>
+                  <i class="ph ph-caret-up" style="font-size: 0.875rem;"></i>
+                </span>
+                <div class="provider-dropdown" style="display: none;">
+                  <div class="provider-option" data-provider="gemini" onclick="selectProvider('gemini')">
+                    <i class="ph ph-check provider-check"></i>
+                    <span>Gemini</span>
+                  </div>
+                  <div class="provider-option" data-provider="groq" onclick="selectProvider('groq')">
+                    <i class="ph ph-check provider-check"></i>
+                    <span>Groq</span>
+                  </div>
+                  <div class="provider-option" data-provider="openrouter" onclick="selectProvider('openrouter')">
+                    <i class="ph ph-check provider-check"></i>
+                    <span>OpenRouter</span>
+                  </div>
+                  <div class="provider-option" data-provider="mistral" onclick="selectProvider('mistral')">
+                    <i class="ph ph-check provider-check"></i>
+                    <span>Mistral AI</span>
+                  </div>
+                </div>
+              </div>
+              <!-- <span class="active-effect tool-btn" onclick="toggleChatInputExpand()">
+                <i class="ph ph-paperclip item-btn"></i>
+              </span> -->
+              <!-- Send/Stop button integrated -->
+              <div class="send-stop-btn-wrapper">
+                <span class="send-btn-icon active-effect"
+                  onclick="addUserMessageAndSend(chatInputEl.value); chatInputEl.value = '';">
+                  <i class="ph ph-paper-plane-right"></i>
+                </span>
+                <span class="stop-btn-icon active-effect" onclick="stopCurrentRequest()">
+                  <i class="ph ph-stop"></i>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- end chat input -->
+      </div>
+      <!-- chat body -->
+    </div>
+  </div>
+</body>
+<script src="./assets/libs/highlight/highlight.min.js"></script>
+<script src="./assets/libs/markdown/markdown-it.min.js"></script>
+<script src="./assets/js/search-tools.js"></script>
+<script src="./assets/js/api-providers.js"></script>
+<script src="./assets/js/db.js"></script>
+<script src="./assets/js/chat.js"></script>
+<script src="./assets/js/app.js"></script>
+
+</html>
