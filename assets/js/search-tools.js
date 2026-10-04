@@ -26,7 +26,7 @@ function getReadinessHint(userQuestion) {
 
 // Hardcoded fallback keys (each gets 100 free queries/day)
 const GOOGLE_SEARCH_DEFAULT_KEYS = [
-    { key: 'AIzaSyDVfZpVKPGg_KpMdn2zFJ-EFRpo_hrXCpo', cx: 'f50a50cea301c4041' },
+    { key: '', cx: '' },
 ];
 
 // Load combined keys: user config + fallback
